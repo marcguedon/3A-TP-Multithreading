@@ -19,3 +19,6 @@ class Task:
         start = time.perf_counter()
         self.x = np.linalg.solve(self.a, self.b)
         self.time = time.perf_counter() - start
+
+    def get_x(self):
+        return self.x
