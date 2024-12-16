@@ -18,6 +18,14 @@ class TestStringMethods(unittest.TestCase):
             err_msg="res n'est pas égal à x",
         )
 
+    def test_json(self):
+        task = Task()
+
+        json = task.to_json()
+        task2 = Task.from_json(json)
+
+        self.assertEqual(task, task2)
+
 
 if __name__ == "__main__":
     unittest.main()
