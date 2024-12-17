@@ -20,9 +20,9 @@ Task::Task(int identifier, int size, const Eigen::MatrixXd &a,
     std::uniform_int_distribution<> sizeDist(300, 3000);
     size = sizeDist(gen);
 
-    a = Eigen::MatrixXd::Random(size, size);
-    b = Eigen::VectorXd::Random(size);
-    x = Eigen::VectorXd::Zero(size);
+    this->a = Eigen::MatrixXd::Random(size, size);
+    this->b = Eigen::VectorXd::Random(size);
+    this->x = Eigen::VectorXd::Zero(size);
   }
 }
 
@@ -36,37 +36,42 @@ void Task::work() {
 const Eigen::VectorXd &Task::get_x() const { return x; }
 
 std::string Task::to_json() const {
-  json j;
-  j["identifier"] = identifier;
-  j["size"] = size;
-  j["a"] =
+  json file;
+  file["identifier"] = identifier;
+  file["size"] = size;
+  file["a"] =
       std::vector<std::vector<double>>(a.rows(), std::vector<double>(a.cols()));
+
   for (int i = 0; i < a.rows(); ++i) {
     for (int j = 0; j < a.cols(); ++j) {
-      j["a"][i][j] = a(i, j);
+      file["a"][i][j] = a(i, j);
     }
   }
-  j["b"] = std::vector<double>(b.data(), b.data() + b.size());
-  j["time"] = time;
-  return j.dump();
+
+  file["b"] = std::vector<double>(b.data(), b.data() + b.size());
+  file["time"] = time;
+
+  return file.dump();
 }
 
 Task Task::from_json(const std::string &jsonString) {
-  json j = json::parse(jsonString);
+  json file = json::parse(jsonString);
 
-  int identifier = j["identifier"];
-  int size = j["size"];
+  int identifier = file["identifier"];
+  int size = file["size"];
 
   Eigen::MatrixXd a(size, size);
+
   for (int i = 0; i < size; ++i) {
     for (int j = 0; j < size; ++j) {
-      a(i, j) = j["a"][i][j];
+      a(i, j) = file["a"][i][j];
     }
   }
 
   Eigen::VectorXd b(size);
+
   for (int i = 0; i < size; ++i) {
-    b[i] = j["b"][i];
+    b[i] = file["b"][i];
   }
 
   return Task(identifier, size, a, b);
