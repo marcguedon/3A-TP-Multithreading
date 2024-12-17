@@ -36,7 +36,6 @@ class Task:
                 "size": self.size,
                 "a": self.a.tolist(),
                 "b": self.b.tolist(),
-                "time": self.time,
             }
         )
 
@@ -48,7 +47,6 @@ class Task:
             json_file["size"],
             np.array(json_file["a"]),
             np.array(json_file["b"]),
-            json_file["time"],
         )
 
     def __eq__(self, other: "Task") -> bool:
