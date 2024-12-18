@@ -1,4 +1,5 @@
 #include "task.hpp"
+#include <iostream>
 #include <nlohmann/json.hpp>
 #include <random>
 #include <stdexcept>
@@ -31,6 +32,7 @@ void Task::work() {
   x = a.colPivHouseholderQr().solve(b);
   auto end = std::chrono::high_resolution_clock::now();
   time = std::chrono::duration<double>(end - start).count();
+  std::cout << "[TASK] tâche terminée" << std::endl;
 }
 
 const Eigen::VectorXd &Task::get_x() const { return x; }

@@ -15,7 +15,7 @@ class Proxy(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-type", "application/json")
         self.end_headers()
-        task = self.client.task_queue.get()
+        task = self.client.tasks_queue.get()
         self.wfile.write(bytes(task.to_json(), "utf-8"))
 
     def do_POST(self):
@@ -25,7 +25,7 @@ class Proxy(BaseHTTPRequestHandler):
         content_length = int(self.headers.get("content-length"))
         content = self.rfile.read(content_length)
         task = Task.from_json(content.decode())
-        task = self.client.result_queue.put(task)
+        task = self.client.results_queue.put(task)
         self.wfile.write(bytes(dumps({"status": "ok"}), "utf-8"))
 
 
