@@ -1,33 +1,39 @@
+import threading
+import json
+
 from task import Task
 from queuemanager import QueueClient
 
 
 class Boss(QueueClient):
-    result = None
-
-    # def run(self):
-    #     while True:
-    #         self.post_task()
-    #         self.get_results()
-    #         print(self.result)
-
     def run(self):
-        for _ in range(5):
-            self.post_task()
-
-        for _ in range(5):
-            self.get_results()
-            print(self.result)
+        self.post_task()
 
     def post_task(self):
-        task = Task()
+        task = Task(size=10000)
+        self.tasks_queue.put(task)
         self.tasks_queue.put(task)
         print("[BOSS] Envoi Task")
 
-    def get_results(self):
-        self.result = self.results_queue.get()
+    def print_result(self):
+        print("identifier 2 -> C++ / identifier 3 -> python")
+        for _ in range(2):
+            result_task = self.results_queue.get()
+            file = json.loads(result_task.to_json())
+            time = file["time"]
+            size = file["size"]
+            identifier = file["identifier"]
+            print(
+                "[BOSS] Tâche", "identifier:", identifier, "time:", time, "size:", size
+            )
 
 
 if __name__ == "__main__":
     boss = Boss()
+
+    result_thread = threading.Thread(target=boss.print_result, daemon=True)
+    result_thread.start()
+
     boss.run()
+
+    result_thread.join()

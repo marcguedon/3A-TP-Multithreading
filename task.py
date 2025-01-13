@@ -4,9 +4,9 @@ import numpy as np
 
 
 class Task:
-    def __init__(self, identifier=0, size=None, a=None, b=None):
+    def __init__(self, identifier=0, size=None, a=None, b=None, x=None, time=None):
         self.identifier = identifier
-        self.size = size or np.random.randint(300, 3_000)
+        self.size = size or np.random.randint(300, 3000)
 
         if a is None:
             self.a = np.random.rand(self.size, self.size)
@@ -18,16 +18,20 @@ class Task:
         else:
             self.b = b
 
-        self.x = np.zeros(self.size)
-        self.time = None
+        if x is None:
+            self.x = np.zeros(self.size)
+        else:
+            self.x = x
+
+        if time is None:
+            self.time = 0.0
+        else:
+            self.time = time
 
     def work(self):
         start = time.perf_counter()
         self.x = np.linalg.solve(self.a, self.b)
         self.time = time.perf_counter() - start
-
-    def get_x(self):
-        return self.x
 
     def to_json(self) -> str:
         return json.dumps(
@@ -36,6 +40,8 @@ class Task:
                 "size": self.size,
                 "a": self.a.tolist(),
                 "b": self.b.tolist(),
+                "x": self.x.tolist(),
+                "time": self.time,
             }
         )
 
@@ -43,10 +49,12 @@ class Task:
     def from_json(text: str) -> "Task":
         json_file = json.loads(text)
         return Task(
-            json_file["identifier"],
-            json_file["size"],
-            np.array(json_file["a"]),
-            np.array(json_file["b"]),
+            identifier=json_file["identifier"],
+            size=json_file["size"],
+            a=np.array(json_file["a"]),
+            b=np.array(json_file["b"]),
+            x=np.array(json_file["x"]),
+            time=json_file["time"],
         )
 
     def __eq__(self, other: "Task") -> bool:
@@ -58,4 +66,9 @@ class Task:
             and self.size == other.size
             and np.array_equal(self.a, other.a)
             and np.array_equal(self.b, other.b)
+            and np.array_equal(self.x, other.x)
+            and np.isclose(self.time, other.time, rtol=1e-5, atol=1e-8)
         )
+
+    def __repr__(self) -> str:
+        return str(self.x)
