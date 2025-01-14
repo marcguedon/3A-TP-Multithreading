@@ -10,7 +10,7 @@ class Boss(QueueClient):
         self.post_task()
 
     def post_task(self):
-        task = Task(size=10000)
+        task = Task(size=5000)
         self.tasks_queue.put(task)
         self.tasks_queue.put(task)
         print("[BOSS] Envoi Task")
