@@ -1,8 +1,9 @@
-# Rapport TP Multi-threading
-- Marc Guedon 3A SRI
-- Bastien Lalanne 3A SRI
+# Rapport TP Multi-threading 3A SRI
+
+Marc Guedon - Bastien Lalanne
 
 ## Exécution des scripts
+
 Ordre d'exécution :
 1. `queuemanager.py`
 2. `proxy.py`
@@ -11,6 +12,7 @@ Ordre d'exécution :
 5. `boss.py`
 
 ## Tests de performance
+
 <table>
   <tr>
     <th>Commande utilisée</th>
@@ -19,7 +21,7 @@ Ordre d'exécution :
     <th>C++ Time (s)</th>
   </tr>
   <tr>
-    <td  rowspan="5"><code>cmake -B build -S .</code></td>
+    <td rowspan="5"><code>cmake -B build -S .</code></td>
     <td>100</td>
     <td>0.00043686399999387504</td>
     <td>0.000584581</td>
@@ -45,7 +47,7 @@ Ordre d'exécution :
     <td>69.98614202</td>
   </tr>
   <tr>
-    <td  rowspan="5"><code>cmake -B build -S . -DCMAKE_BUILD_TYPE=Release</code></td>
+    <td rowspan="5"><code>cmake -B build -S . -DCMAKE_BUILD_TYPE=Release</code></td>
     <td>100</td>
     <td>0.0004225420000238955</td>
     <td>0.000780551</td>
